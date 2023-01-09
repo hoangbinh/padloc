@@ -18,7 +18,7 @@ import {
 import { Err, ErrorCode } from "@padloc/core/src/error";
 import SJCLProvider from "@padloc/core/src/sjcl";
 
-const webCrypto = window.crypto.subtle;
+const webCrypto = window.crypto && window.crypto.subtle;
 
 export class WebCryptoProvider implements CryptoProvider {
     async randomBytes(n: number): Promise<Uint8Array> {
@@ -40,6 +40,7 @@ export class WebCryptoProvider implements CryptoProvider {
             case "HMAC":
                 return this.randomBytes(params.keySize / 8);
             case "RSA":
+                console.log(webCrypto);
                 const keyPair = (await webCrypto.generateKey(Object.assign(params, { name: "RSA-OAEP" }), true, [
                     "encrypt",
                     "decrypt",
